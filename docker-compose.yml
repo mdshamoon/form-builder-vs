@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: format-forge-postgres
+    environment:
+      POSTGRES_USER: format_forge
+      POSTGRES_PASSWORD: format_forge_password
+      POSTGRES_DB: format_forge_db
+    ports:
+      - "5444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U format_forge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - format-forge-network
+
+  # FastAPI Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: format-forge-backend
+    environment:
+      DATABASE_URL: postgresql://format_forge:format_forge_password@postgres:5432/format_forge_db
+      SECRET_KEY: your-secret-key-change-this-in-production
+      ALLOWED_ORIGINS: http://localhost:5173,http://localhost:3000,http://localhost
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "8211:8000"
+    volumes:
+      - ./backend:/app
+      - uploads_data:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "
+        uv run alembic upgrade head &&
+        uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      "
+    networks:
+      - format-forge-network
+
+  # React Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8211}
+    container_name: format-forge-frontend
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8211}
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - format-forge-network
+
+volumes:
+  postgres_data:
+  uploads_data:
+
+networks:
+  format-forge-network:
+    driver: bridge
