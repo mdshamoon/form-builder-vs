@@ -84,7 +84,7 @@ export const TemplateCanvas: React.FC<TemplateCanvasProps> = ({ template }) => {
         minScale={0.1}
         maxScale={5}
         limitToBounds={false}
-        centerOnInit
+        centerOnInit={false}
         wheel={{ step: 0.1 }}
         pinch={{ step: 5 }}
         panning={{

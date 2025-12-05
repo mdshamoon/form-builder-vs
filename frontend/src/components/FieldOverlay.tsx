@@ -73,28 +73,28 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
       onClick={handleClick}
       layout
     >
-      {/* Field label - compensate for zoom */}
+      {/* Field label - keep at constant size */}
       <div
         className="absolute left-0 font-medium bg-blue-600 text-white rounded whitespace-nowrap"
         style={{
-          fontSize: `${12 / scale}px`,
-          top: `${-24 / scale}px`,
-          padding: `${4 / scale}px ${8 / scale}px`,
-          borderRadius: `${4 / scale}px`,
+          fontSize: '12px',
+          top: '-24px',
+          padding: '4px 8px',
+          borderRadius: '4px',
         }}
       >
         {field.label}
         {field.required && <span className="text-red-300 ml-1">*</span>}
       </div>
 
-      {/* Field value preview - compensate for zoom */}
+      {/* Field value preview - keep at constant size */}
       {hasValue && (
         <div
           className="absolute overflow-hidden font-medium text-gray-900"
           style={{
-            fontSize: `${actualFontSize / scale}px`,
-            lineHeight: `${(actualFontSize * 1.2) / scale}px`,
-            padding: `${2 / scale}px`,
+            fontSize: `${actualFontSize}px`,
+            lineHeight: `${actualFontSize * 1.2}px`,
+            padding: '2px',
             top: 0,
             left: 0,
             right: 0,
@@ -107,7 +107,7 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
         </div>
       )}
 
-      {/* Empty field indicator - compensate for zoom */}
+      {/* Empty field indicator - keep pencil icon at constant size */}
       {!hasValue && (
         <div className="absolute inset-0 flex items-center justify-center">
           <svg
@@ -116,14 +116,14 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
             stroke="currentColor"
             viewBox="0 0 24 24"
             style={{
-              width: `${32 / scale}px`,
-              height: `${32 / scale}px`,
+              width: '32px',
+              height: '32px',
             }}
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2 / scale}
+              strokeWidth={2}
               d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
             />
           </svg>

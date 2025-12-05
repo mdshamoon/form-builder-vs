@@ -126,20 +126,20 @@ class PDFService:
 
                 # Draw field value
                 try:
+                    # Add padding to match frontend (2px top, 4px left)
+                    text_x = x + 4  # 4px left padding
+                    text_y = y - 2 - font_size  # 2px top padding + font size for proper positioning
+                    
                     # Handle multiline text
                     if field_type == "textarea" and "\n" in value:
                         lines = value.split("\n")
                         for i, line in enumerate(lines):
-                            text_y = y - 5 - (i * line_height)
-                            if text_y > y - height:  # Only draw if within field bounds
-                                c.drawString(x + 5, text_y, line[:100])
+                            line_y = text_y - (i * line_height)
+                            if line_y > y - height:  # Only draw if within field bounds
+                                c.drawString(text_x, line_y, line[:100])
                     else:
-                        # Single line - center vertically
-                        text_y = y - (height / 2) - (font_size / 2)
-                        # Truncate if too long
-                        max_chars = int(width / (font_size * 0.5))
-                        truncated = value[:max_chars]
-                        c.drawString(x + 5, text_y, truncated)
+                        # Single line - draw at top with padding, matching preview
+                        c.drawString(text_x, text_y, value[:int(width / (font_size * 0.5))])
                 except Exception as e:
                     logger.warning("failed_to_draw_field", field_id=field_id, error=str(e))
 

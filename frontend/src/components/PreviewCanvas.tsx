@@ -79,7 +79,7 @@ export const PreviewCanvas: React.FC<PreviewCanvasProps> = ({ template }) => {
         minScale={0.1}
         maxScale={5}
         limitToBounds={false}
-        centerOnInit
+        centerOnInit={false}
         wheel={{ step: 0.1 }}
         pinch={{ step: 5 }}
         panning={{
@@ -190,9 +190,12 @@ export const PreviewCanvas: React.FC<PreviewCanvasProps> = ({ template }) => {
                         fontSize: `${scaledFontSize}px`,
                         lineHeight: `${scaledLineHeight}px`,
                         padding: '2px 4px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'flex-start',
                       }}
                     >
-                      <div className="text-gray-900 font-medium break-words">
+                      <div className="text-gray-900 font-medium whitespace-pre-wrap break-words">
                         {field.type === 'textarea' ? (
                           fieldValue.split('\n').map((line, i) => (
                             <div key={i}>{line}</div>
