@@ -34,7 +34,7 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
   actualImageWidth,
   actualImageHeight,
 }) => {
-  const { openFieldEditor, formData } = useAppStore();
+  const { openFieldEditor, formData, isMobile } = useAppStore();
 
   // Convert percentage to pixels and apply offsets
   const pixelPosition = percentToPixels(position, imageWidth, imageHeight);
@@ -73,13 +73,13 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
       onClick={handleClick}
       layout
     >
-      {/* Field label - keep at constant size */}
+      {/* Field label - keep at constant size, smaller on mobile */}
       <div
         className="absolute left-0 font-medium bg-blue-600 text-white rounded whitespace-nowrap"
         style={{
-          fontSize: '12px',
-          top: '-24px',
-          padding: '4px 8px',
+          fontSize: isMobile ? '7px' : '12px',
+          top: isMobile ? '-16px' : '-24px',
+          padding: isMobile ? '1px 4px' : '4px 8px',
           borderRadius: '4px',
         }}
       >
@@ -87,13 +87,13 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
         {field.required && <span className="text-red-300 ml-1">*</span>}
       </div>
 
-      {/* Field value preview - keep at constant size */}
+      {/* Field value preview - keep at constant size, smaller on mobile */}
       {hasValue && (
         <div
           className="absolute overflow-hidden font-medium text-gray-900"
           style={{
-            fontSize: `${actualFontSize}px`,
-            lineHeight: `${actualFontSize * 1.2}px`,
+            fontSize: `${isMobile ? actualFontSize * 0.5 : actualFontSize}px`,
+            lineHeight: `${isMobile ? actualFontSize * 0.5 * 1.2 : actualFontSize * 1.2}px`,
             padding: '2px',
             top: 0,
             left: 0,
@@ -107,7 +107,7 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
         </div>
       )}
 
-      {/* Empty field indicator - keep pencil icon at constant size */}
+      {/* Empty field indicator - keep pencil icon at constant size, smaller on mobile */}
       {!hasValue && (
         <div className="absolute inset-0 flex items-center justify-center">
           <svg
@@ -116,8 +116,8 @@ export const FieldOverlay: React.FC<FieldOverlayProps> = ({
             stroke="currentColor"
             viewBox="0 0 24 24"
             style={{
-              width: '32px',
-              height: '32px',
+              width: isMobile ? '16px' : '32px',
+              height: isMobile ? '16px' : '32px',
             }}
           >
             <path
